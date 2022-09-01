@@ -1,11 +1,11 @@
 export interface IRestakeInfo {
-  frequency: string,
-  minimumRewards: number,
-  round: number,
-  feesAmount: string,
-  restakeAmount: string,
-  restakeCount: number,
-  nextRoundDateTime: string
+  frequency: string;
+  minimumRewards: number;
+  round: number;
+  feesAmount: string;
+  restakeAmount: string;
+  restakeCount: number;
+  nextRoundDateTime: string;
 }
 
 export interface IDelegatorRewardInfo {
@@ -14,23 +14,23 @@ export interface IDelegatorRewardInfo {
 }
 
 export interface IRestakeStatus {
-  round: number,
-  feesAmount: number,
-  restakeAmount: number,
-  restakeCount: number,
-  restakeAvgTime: number,
-  nextRoundDateTime: string,
-  roundDatas: IRestakeRoundData[]
+  round: number;
+  feesAmount: number;
+  restakeAmount: number;
+  restakeCount: number;
+  restakeAvgTime: number;
+  nextRoundDateTime: string;
+  roundDatas: IRestakeRoundData[];
 }
 
 export interface IRestakeRoundData {
-  round: number,
-  startDateTime: string,
-  restakeAmount: number,
-  feesAmount: number,
-  restakeCount: number,
-  restakeTotalTime: number,
-  roundDetails: IRoundDetail[]
+  round: number;
+  startDateTime: string;
+  restakeAmount: number;
+  feesAmount: number;
+  restakeCount: number;
+  restakeTotalTime: number;
+  roundDetails: IRoundDetail[];
 }
 
 export interface IRoundDetail {
@@ -40,11 +40,11 @@ export interface IRoundDetail {
   dateTime: string;
   txHash: string;
   reason?: number;
-  originRestakeTargets?: IRestakeTarget[]
+  originRestakeTargets?: IRestakeTarget[];
 }
 
 export interface IRestakeTarget {
-  validatorAddr: string,
-  delegatorAddr: string,
-  rewards: number
+  validatorAddr: string;
+  delegatorAddr: string;
+  rewards: number;
 }

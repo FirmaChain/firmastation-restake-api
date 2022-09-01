@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MINIMUM_UFCT_REWARD_AMOUNT, RESTAKE_FREQUENCY } from 'src/config';
 
 import { IDelegatorRewardInfo, IRestakeInfo, IRestakeRoundData, IRestakeStatus, IRoundDetail } from 'src/interfaces/restake';
+import { LatestRoundsService } from 'src/latest-rounds/latest-rounds.service';
 
 import { RoundsService } from 'src/rounds/rounds.service';
 import { StatusesService } from 'src/statuses/statuses.service';
@@ -12,6 +13,7 @@ export class RestakeService {
   constructor(
     private readonly roundsService: RoundsService,
     private readonly statusesService: StatusesService,
+    private readonly latestRoundsService: LatestRoundsService
   ) { }
 
   getHealth(): string {
@@ -139,18 +141,12 @@ export class RestakeService {
   }
 
   async getDelegatorLatestRewardInfo(delegatorAddr: string): Promise<IDelegatorRewardInfo[]> {
-    const statusData = await this.statusesService.findOne();
-    if (statusData === null) {
+    const latestRoundData = await this.latestRoundsService.findOne();
+    if (latestRoundData === null) {
       return [];
     }
 
-    const currentRound = statusData.nowRound;
-    const currentRoundData = await this.roundsService.findOne(currentRound);
-    if (currentRoundData === null || currentRoundData === undefined) {
-      return [];
-    }
-
-    const roundDetails = currentRoundData.roundDetails;
+    const roundDetails = latestRoundData.roundDetails;
     if (roundDetails.length === 0) {
       return [];
     }

@@ -6,12 +6,14 @@ import { RoundsModule } from './rounds/rounds.module';
 import { RestakeController } from './restake/restake.controller';
 import { RestakeService } from './restake/restake.service';
 import { MONGODB_URI } from './config';
+import { LatestRoundsModule } from './latest-rounds/latest-rounds.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(MONGODB_URI),
     StatusesModule,
     RoundsModule,
+    LatestRoundsModule,
   ],
   controllers: [RestakeController],
   providers: [RestakeService],
