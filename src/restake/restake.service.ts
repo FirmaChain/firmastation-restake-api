@@ -39,9 +39,13 @@ export class RestakeService {
     let accRestakeAmount = 0;
     let accFeesAmount = 0;
     let accRestakeCount = 0;
+    
+    const publicPath = join(__dirname, '../..', 'public');
+    const statusRoundDataFilePath = join(publicPath, STATUS_ROUND_DATA_FILE_NAME);
 
-    const latestRound = await this.roundsService.findLatest();
-    if (latestRound !== null) {
+    if (fs.existsSync(statusRoundDataFilePath) === true) {
+      const restakeStatusData: IRestakeStatus = JSON.parse(fs.readFileSync(statusRoundDataFilePath, 'utf-8'));
+      const latestRound = restakeStatusData.roundDatas[0];
 
       const roundDetails = latestRound.roundDetails;
       for (let i = 0; i < roundDetails.length; i++) {
