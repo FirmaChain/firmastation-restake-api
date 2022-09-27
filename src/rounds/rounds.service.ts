@@ -9,6 +9,16 @@ export class RoundsService {
   constructor(@InjectModel(Rounds.name) private readonly roundsModel: Model<RoundsDocument>) {
   }
 
+  async findAll(): Promise<Rounds[]> {
+    let count = await this.count();
+    if (count === 0) {
+      return [];
+    }
+
+    const rounds = await this.roundsModel.find();
+    return rounds;
+  }
+  
   async findAllReverse(): Promise<Rounds[]> {
     let count = await this.count();
     if (count === 0) {

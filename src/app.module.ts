@@ -7,15 +7,18 @@ import { RestakeController } from './restake/restake.controller';
 import { RestakeService } from './restake/restake.service';
 import { MONGODB_URI } from './config';
 import { LatestRoundsModule } from './latest-rounds/latest-rounds.module';
+import { SchedulerService } from './scheduler/scheduler.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     MongooseModule.forRoot(MONGODB_URI),
     StatusesModule,
     RoundsModule,
     LatestRoundsModule,
   ],
   controllers: [RestakeController],
-  providers: [RestakeService],
+  providers: [RestakeService, SchedulerService],
 })
 export class AppModule {}
