@@ -15,6 +15,7 @@ export class SchedulerService {
     private readonly statusesService: StatusesService,
     private readonly roundsService: RoundsService
   ) { 
+    this.handleCron();
   }
   private statusRoundData: IRestakeStatus;
 
@@ -113,11 +114,12 @@ export class SchedulerService {
       }
 
       if (roundDetailLength > 0) {
-        const startDateTime = (new Date(roundData.scheduleDate)).getTime();
-        const endDateTime = (new Date(roundData.roundDetails[roundDetailLength - 1].dateTime)).getTime();
+        const startDateTime = new Date(roundData.scheduleDate).getTime();
+        const endDateTime = new Date(roundData.roundDetails[roundDetailLength - 1].dateTime).getTime();
         roundRestakeTotalTime = (endDateTime - startDateTime) / 1000;
 
-        if (i < 10) {
+        if (i > roundDatas.length - 11) {
+          console.log(1);
           restakeTotalTime += roundRestakeTotalTime;
         }
       }
