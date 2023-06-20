@@ -119,7 +119,6 @@ export class SchedulerService {
         roundRestakeTotalTime = (endDateTime - startDateTime) / 1000;
 
         if (i > roundDatas.length - 11) {
-          console.log(1);
           restakeTotalTime += roundRestakeTotalTime;
         }
       }
