@@ -1,41 +1,67 @@
 # FirmaStation Restake API
 
-## How to build
-### 1. Install npm
+## **Overview**
+This project is an API server application that retrieves data saved in the database by the restake scheduler.
 
-- Install npm modules
+<br/>
 
-  ```bash
-  $ npm install
-  ```
+## **Features**
+Firmastation Restake API Server provides the following functionalities using the GET method: query the last restake information, query all restake rounds, and query restake statistical data. These information is used in data queries in FirmaStation (Desktop, Mobile).
 
-### 2. Prepare the config file
+<br/>
 
-- Copy config file
-  
-  ```bash
-  $ cp config.sample.ts config.ts
-  ```
+## **Build Instructions**
+```bash
+# Clone the repository
+$ git clone https://github.com/FirmaChain/restake-api-server.git
 
-- Set the variables in config
-  ```bash
-  MONGODB_URI
-   - mongodb://'The address where MongoDB is installed'/'Database name'
+# Move to the project directory
+$ cd restake-api-server
 
-  MINIMUM_UFCT_REWARD_AMOUNT
-   - Minimum amount of Rewards subject to Restake.
-  
-  FREQUENCY
-   - Determines the scheduling time.
-  ```
+# Install necessary packages
+$ npm install
 
-### 3. Run API
+# Copy config.sample.ts file to config.ts
+$ cp config.sample.ts config.ts
+```
 
-- Start the Restake Scheduler
-  ```bash
-  # Start according to PRODUCTION_MODE
-  $ npm run start
+<br/>
 
-  # start:dev enables the --watch option.
-  $ npm run start:dev
-  ```
+## **Environment Setup**
+For the environment setup, you should first create the config.ts file by copying the config.sample.ts file, and then set appropriate values for the following variables.
+
+- `PORT`: Specifies the port on which the server will run (e.g., 3000).
+
+- `MONGODB_URI`: Specifies the URI of the MongoDB to be used.
+
+- `MINIMUM_UFCT_REWARD_AMOUNT`: Specifies the minimum UFCT reward amount.
+
+- `RESTAKE_FREQUENCY`: Specifies the restake frequency.
+
+- `STATUS_ROUND_DATA_FILE_NAME`: Specifies the name of the status round data file ("statusRoundData.json").
+
+<br/>
+
+## **Execution**
+```bash
+# Start the server (development mode)
+$ npm run start:dev
+
+# Start the server (production mode)
+$ npm run start
+```
+
+<br/>
+
+## **Testing**
+Here are some methods to check if the build has been successful.
+```bash
+# Query restake statistical data
+$ curl -X GET http://localhost:3060/restake/info
+
+# Query all restake rounds
+$ curl -X GET http://localhost:3060/restake/status
+
+# Query the last restake amount of the delegator
+$ curl -X GET http://localhost:3060/restake/reward/:delegatorAddress
+```
