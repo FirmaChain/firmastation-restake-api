@@ -10,7 +10,7 @@ import { LatestRoundsService } from './latest-rounds.service';
       useFactory: () => {
         const schema = LatestRoundsSchema;
         schema.pre('save', () => {
-          console.log('Round pre save');
+          console.log('Pre save at LatestRounds');
         });
         return schema;
       }

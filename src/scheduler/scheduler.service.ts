@@ -141,7 +141,6 @@ export class SchedulerService {
     const publicPath = join(__dirname, '../..', 'public');
     const statusRoundDataFilePath = join(publicPath, STATUS_ROUND_DATA_FILE_NAME);
 
-    console.log('write file');
     fs.writeFileSync(statusRoundDataFilePath, JSON.stringify(restakeStatus))
   }
 }
