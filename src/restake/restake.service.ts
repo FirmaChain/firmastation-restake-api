@@ -100,16 +100,17 @@ export class RestakeService {
     let rewardInfos: IDelegatorRewardInfo[] = [];
     for (let i = 0; i < roundDetails.length; i++) {
       const roundDetail = roundDetails[i];
-      const restakeTargets = roundDetail.originRestakeTargets;
+      const restakeTargets = roundDetail.finalRestakeTargets;
+      
       if (restakeTargets.length === 0) {
         continue;
       }
 
       for (let j = 0; j < restakeTargets.length; j++) {
         const restakeTarget = restakeTargets[j];
-        if (restakeTarget.delegatorAddr === delegatorAddr) {
+        if (restakeTarget.delegatorAddress === delegatorAddr) {
           rewardInfos.push({
-            validatorAddr: restakeTarget.validatorAddr,
+            validatorAddr: restakeTarget.validatorAddress,
             rewards: restakeTarget.rewards
           })
         }

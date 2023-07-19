@@ -41,10 +41,11 @@ export interface IRoundDetail {
   txHash: string;
   reason?: number;
   originRestakeTargets?: IRestakeTarget[];
+  finalRestakeTargets?: IRestakeTarget[];
 }
 
 export interface IRestakeTarget {
-  validatorAddr: string;
-  delegatorAddr: string;
+  validatorAddress: string;
+  delegatorAddress: string;
   rewards: number;
 }
