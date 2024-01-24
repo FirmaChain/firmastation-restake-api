@@ -82,7 +82,7 @@ export class SchedulerService {
     restakeStatus.feesAmount = statusData.feesAmount;
     restakeStatus.restakeCount = statusData.restakeCount;
 
-    const roundDatas = await this.roundsService.findAllReverse();
+    const roundDatas = await this.roundsService.findAll();
     if (roundDatas.length === 0) {
       return restakeStatus;
     }
