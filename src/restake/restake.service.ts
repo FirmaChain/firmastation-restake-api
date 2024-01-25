@@ -110,7 +110,7 @@ export class RestakeService {
         const restakeTarget = restakeTargets[j];
         if (restakeTarget["delegatorAddr"] === delegatorAddr) {
           rewardInfos.push({
-            validatorAddr: restakeTarget.validatorAddress,
+            validatorAddr: restakeTarget["validatorAddr"],
             rewards: restakeTarget.rewards
           })
         }
