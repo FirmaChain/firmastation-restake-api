@@ -6,11 +6,13 @@ import { Statuses, StatusesDocument } from './statuses.schema';
 
 @Injectable()
 export class StatusesService {
-  constructor(@InjectModel(Statuses.name) private readonly statusModel: Model<StatusesDocument>) {
-  }
+  constructor(
+    @InjectModel(Statuses.name)
+    private readonly statusModel: Model<StatusesDocument>,
+  ) {}
 
   async findOne(): Promise<Statuses> {
-    let count = await this.count();
+    const count = await this.count();
 
     if (count === 0) {
       return {
@@ -18,8 +20,8 @@ export class StatusesService {
         restakeAmount: 0,
         feesAmount: 0,
         restakeCount: 0,
-        nextRoundDateTime: ''
-      }
+        nextRoundDateTime: '',
+      };
     }
 
     return await this.statusModel.findOne().exec();

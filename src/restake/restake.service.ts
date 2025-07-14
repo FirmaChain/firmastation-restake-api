@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { join } from 'path';
 
-import { MINIMUM_UFCT_REWARD_AMOUNT, RESTAKE_FREQUENCY, STATUS_ROUND_DATA_FILE_NAME } from 'src/config';
+import {
+  MINIMUM_UFCT_REWARD_AMOUNT,
+  RESTAKE_FREQUENCY,
+  STATUS_ROUND_DATA_FILE_NAME,
+} from 'src/config';
 
 import {
   IDelegatorRewardInfo,
@@ -18,33 +22,38 @@ import { ScheduleDate } from 'src/utils/date';
 export class RestakeService {
   constructor(
     private readonly roundsService: RoundsService,
-    private readonly latestRoundsService: LatestRoundsService
-  ) { }
+    private readonly latestRoundsService: LatestRoundsService,
+  ) {}
 
   getHealth(): string {
     return 'OK';
   }
 
   async getRestakeInfo(): Promise<IRestakeInfo> {
-    let restakeInfo: IRestakeInfo = {
+    const restakeInfo: IRestakeInfo = {
       frequency: RESTAKE_FREQUENCY,
       minimumRewards: MINIMUM_UFCT_REWARD_AMOUNT,
       round: 0,
       restakeAmount: '0',
       feesAmount: '0',
       restakeCount: 0,
-      nextRoundDateTime: ScheduleDate().next()
-    }
+      nextRoundDateTime: ScheduleDate().next(),
+    };
 
     let accRestakeAmount = 0;
     let accFeesAmount = 0;
     let accRestakeCount = 0;
-    
+
     const publicPath = join(__dirname, '../..', 'public');
-    const statusRoundDataFilePath = join(publicPath, STATUS_ROUND_DATA_FILE_NAME);
+    const statusRoundDataFilePath = join(
+      publicPath,
+      STATUS_ROUND_DATA_FILE_NAME,
+    );
 
     if (fs.existsSync(statusRoundDataFilePath) === true) {
-      const restakeStatusData: IRestakeStatus = JSON.parse(fs.readFileSync(statusRoundDataFilePath, 'utf-8'));
+      const restakeStatusData: IRestakeStatus = JSON.parse(
+        fs.readFileSync(statusRoundDataFilePath, 'utf-8'),
+      );
       const latestRound = restakeStatusData.roundDatas[0];
 
       const roundDetails = latestRound.roundDetails;
@@ -68,7 +77,10 @@ export class RestakeService {
 
   async getRestakeStatus(): Promise<IRestakeStatus> {
     const publicPath = join(__dirname, '../..', 'public');
-    const statusRoundDataFilePath = join(publicPath, STATUS_ROUND_DATA_FILE_NAME);
+    const statusRoundDataFilePath = join(
+      publicPath,
+      STATUS_ROUND_DATA_FILE_NAME,
+    );
 
     if (fs.existsSync(statusRoundDataFilePath) === false) {
       return {
@@ -78,15 +90,19 @@ export class RestakeService {
         restakeAmount: 0,
         restakeAvgTime: 0,
         restakeCount: 0,
-        roundDatas: []
+        roundDatas: [],
       };
     }
 
-    const restakeStatusData: IRestakeStatus = JSON.parse(fs.readFileSync(statusRoundDataFilePath, 'utf-8'));
+    const restakeStatusData: IRestakeStatus = JSON.parse(
+      fs.readFileSync(statusRoundDataFilePath, 'utf-8'),
+    );
     return restakeStatusData;
   }
 
-  async getDelegatorLatestRewardInfo(delegatorAddr: string): Promise<IDelegatorRewardInfo[]> {
+  async getDelegatorLatestRewardInfo(
+    delegatorAddr: string,
+  ): Promise<IDelegatorRewardInfo[]> {
     const latestRoundData = await this.latestRoundsService.findOne();
     if (latestRoundData === null) {
       return [];
@@ -97,22 +113,22 @@ export class RestakeService {
       return [];
     }
 
-    let rewardInfos: IDelegatorRewardInfo[] = [];
+    const rewardInfos: IDelegatorRewardInfo[] = [];
     for (let i = 0; i < roundDetails.length; i++) {
       const roundDetail = roundDetails[i];
       const restakeTargets = roundDetail.finalRestakeTargets;
-      
+
       if (restakeTargets.length === 0) {
         continue;
       }
 
       for (let j = 0; j < restakeTargets.length; j++) {
         const restakeTarget = restakeTargets[j];
-        if (restakeTarget["delegatorAddr"] === delegatorAddr) {
+        if (restakeTarget['delegatorAddr'] === delegatorAddr) {
           rewardInfos.push({
-            validatorAddr: restakeTarget["validatorAddr"],
-            rewards: restakeTarget.rewards
-          })
+            validatorAddr: restakeTarget['validatorAddr'],
+            rewards: restakeTarget.rewards,
+          });
         }
       }
     }

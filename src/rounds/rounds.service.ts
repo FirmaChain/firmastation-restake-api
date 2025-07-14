@@ -6,11 +6,13 @@ import { Rounds, RoundsDocument } from './rounds.schema';
 
 @Injectable()
 export class RoundsService {
-  constructor(@InjectModel(Rounds.name) private readonly roundsModel: Model<RoundsDocument>) {
-  }
+  constructor(
+    @InjectModel(Rounds.name)
+    private readonly roundsModel: Model<RoundsDocument>,
+  ) {}
 
   async findAll(): Promise<Rounds[]> {
-    let count = await this.count();
+    const count = await this.count();
     if (count === 0) {
       return [];
     }
@@ -18,29 +20,32 @@ export class RoundsService {
     const rounds = await this.roundsModel.find();
     return rounds;
   }
-  
+
   async findAllReverse(): Promise<Rounds[]> {
-    let count = await this.count();
+    const count = await this.count();
     if (count === 0) {
       return [];
     }
 
-    const rounds = await this.roundsModel.find().sort({ round: -1});
+    const rounds = await this.roundsModel.find().sort({ round: -1 });
     return rounds;
   }
 
   async findLatest(): Promise<Rounds> {
-    let count = await this.count();
+    const count = await this.count();
     if (count === 0) {
       return null;
     }
 
-    const roundData = await this.roundsModel.find().sort({ round: -1 }).limit(1);
+    const roundData = await this.roundsModel
+      .find()
+      .sort({ round: -1 })
+      .limit(1);
     return roundData[0];
   }
 
   async findOne(round: number): Promise<Rounds> {
-    let count = await this.count();
+    const count = await this.count();
     if (count === 0) {
       return null;
     }
