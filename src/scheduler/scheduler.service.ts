@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import * as fs from 'fs';
 import { join } from 'path';
 import { STATUS_ROUND_DATA_FILE_NAME } from 'src/config';
-import { IRestakeRoundData, IRestakeStatus, IRoundDetail } from 'src/interfaces/restake';
+import {
+  IRestakeRoundData,
+  IRestakeStatus,
+  IRoundDetail,
+} from 'src/interfaces/restake';
 
 import { RoundsService } from 'src/rounds/rounds.service';
 import { StatusesService } from 'src/statuses/statuses.service';
@@ -13,15 +17,15 @@ import { ScheduleDate } from 'src/utils/date';
 export class SchedulerService {
   constructor(
     private readonly statusesService: StatusesService,
-    private readonly roundsService: RoundsService
-  ) { 
+    private readonly roundsService: RoundsService,
+  ) {
     this.handleCron();
   }
   private statusRoundData: IRestakeStatus;
 
-  @Cron("*/2 * * * *", {
+  @Cron('*/2 * * * *', {
     name: 'restake_data_handling',
-    timeZone: 'Etc/UTC'
+    timeZone: 'Etc/UTC',
   })
   async handleCron() {
     // file
@@ -32,40 +36,52 @@ export class SchedulerService {
 
   fileCheck() {
     const publicPath = join(__dirname, '../..', 'public');
-    const statusRoundDataFilePath = join(publicPath, STATUS_ROUND_DATA_FILE_NAME);
+    const statusRoundDataFilePath = join(
+      publicPath,
+      STATUS_ROUND_DATA_FILE_NAME,
+    );
 
-    const isDirExists = fs.existsSync(publicPath) && fs.lstatSync(publicPath).isDirectory();
+    const isDirExists =
+      fs.existsSync(publicPath) && fs.lstatSync(publicPath).isDirectory();
     if (isDirExists === false) {
       fs.mkdirSync(publicPath);
     }
 
-    const isRoundJsonExists = fs.existsSync(statusRoundDataFilePath) && fs.lstatSync(statusRoundDataFilePath).isFile();
+    const isRoundJsonExists =
+      fs.existsSync(statusRoundDataFilePath) &&
+      fs.lstatSync(statusRoundDataFilePath).isFile();
     if (isRoundJsonExists === false) {
-      let restakeStatus = {
+      const restakeStatus = {
         round: 0,
         restakeAmount: 0,
         feesAmount: 0,
         restakeCount: 0,
         restakeAvgTime: 0,
         nextRoundDateTime: ScheduleDate().next(),
-        roundDatas: []
-      }
-      fs.writeFileSync(statusRoundDataFilePath, JSON.stringify(restakeStatus), 'utf-8');
+        roundDatas: [],
+      };
+      fs.writeFileSync(
+        statusRoundDataFilePath,
+        JSON.stringify(restakeStatus),
+        'utf-8',
+      );
     }
 
-    this.statusRoundData = JSON.parse(fs.readFileSync(statusRoundDataFilePath, 'utf-8'));
+    this.statusRoundData = JSON.parse(
+      fs.readFileSync(statusRoundDataFilePath, 'utf-8'),
+    );
   }
 
   async setRestakeData() {
-    let restakeStatus: IRestakeStatus = {
+    const restakeStatus: IRestakeStatus = {
       round: 0,
       restakeAmount: 0,
       feesAmount: 0,
       restakeCount: 0,
       restakeAvgTime: 0,
       nextRoundDateTime: ScheduleDate().next(),
-      roundDatas: []
-    }
+      roundDatas: [],
+    };
     let restakeTotalTime = 0;
 
     const statusData = await this.statusesService.findOne();
@@ -74,7 +90,7 @@ export class SchedulerService {
     }
 
     if (this.statusRoundData.round === statusData.nowRound) {
-      return ;
+      return;
     }
 
     restakeStatus.round = statusData.nowRound;
@@ -93,8 +109,8 @@ export class SchedulerService {
       let roundFeesAmount = 0;
       let roundRestakeCount = 0;
       let roundRestakeTotalTime = 0;
-      let roundDetails: IRoundDetail[] = [];
-      let roundDetailLength = roundData.roundDetails.length;
+      const roundDetails: IRoundDetail[] = [];
+      const roundDetailLength = roundData.roundDetails.length;
 
       for (let j = 0; j < roundDetailLength; j++) {
         const roundDetail = roundData.roundDetails[j];
@@ -108,14 +124,16 @@ export class SchedulerService {
             restakeAmount: roundDetail.restakeAmount,
             feesAmount: roundDetail.feesAmount,
             restakeCount: roundDetail.restakeCount,
-            dateTime: roundDetail.dateTime
+            dateTime: roundDetail.dateTime,
           });
         }
       }
 
       if (roundDetailLength > 0) {
         const startDateTime = new Date(roundData.scheduleDate).getTime();
-        const endDateTime = new Date(roundData.roundDetails[roundDetailLength - 1].dateTime).getTime();
+        const endDateTime = new Date(
+          roundData.roundDetails[roundDetailLength - 1].dateTime,
+        ).getTime();
         roundRestakeTotalTime = (endDateTime - startDateTime) / 1000;
 
         if (i > roundDatas.length - 11) {
@@ -130,17 +148,21 @@ export class SchedulerService {
         feesAmount: roundFeesAmount,
         restakeCount: roundRestakeCount,
         restakeTotalTime: Number(roundRestakeTotalTime.toFixed(2)),
-        roundDetails: roundDetails
-      }
+        roundDetails: roundDetails,
+      };
       restakeStatus.roundDatas.push(restakeRoundData);
     }
 
-    let restakeAvgTime = restakeTotalTime / (roundDatas.length <= 10 ? roundDatas.length : 10);
+    const restakeAvgTime =
+      restakeTotalTime / (roundDatas.length <= 10 ? roundDatas.length : 10);
     restakeStatus.restakeAvgTime = Number(restakeAvgTime.toFixed(2));
 
     const publicPath = join(__dirname, '../..', 'public');
-    const statusRoundDataFilePath = join(publicPath, STATUS_ROUND_DATA_FILE_NAME);
+    const statusRoundDataFilePath = join(
+      publicPath,
+      STATUS_ROUND_DATA_FILE_NAME,
+    );
 
-    fs.writeFileSync(statusRoundDataFilePath, JSON.stringify(restakeStatus))
+    fs.writeFileSync(statusRoundDataFilePath, JSON.stringify(restakeStatus));
   }
 }

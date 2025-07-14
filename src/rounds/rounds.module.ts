@@ -5,15 +5,17 @@ import { Rounds, RoundsSchema } from './rounds.schema';
 import { RoundsService } from './rounds.service';
 
 @Module({
-  imports: [MongooseModule.forFeatureAsync([
-    {
-      name: Rounds.name,
-      useFactory: () => {
-        return RoundsSchema;
-      }
-    }
-  ])],
+  imports: [
+    MongooseModule.forFeatureAsync([
+      {
+        name: Rounds.name,
+        useFactory: () => {
+          return RoundsSchema;
+        },
+      },
+    ]),
+  ],
   providers: [RoundsService],
-  exports: [RoundsService]
+  exports: [RoundsService],
 })
 export class RoundsModule {}

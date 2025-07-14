@@ -5,7 +5,10 @@ import { LatestRounds, LatestRoundsDocument } from './latest-rounds.schema';
 
 @Injectable()
 export class LatestRoundsService {
-  constructor(@InjectModel(LatestRounds.name) private readonly latestRoundsModel: Model<LatestRoundsDocument>) {}
+  constructor(
+    @InjectModel(LatestRounds.name)
+    private readonly latestRoundsModel: Model<LatestRoundsDocument>,
+  ) {}
 
   async findOne(): Promise<LatestRounds> {
     const count = await this.count();
@@ -17,7 +20,7 @@ export class LatestRoundsService {
   }
 
   private async count(): Promise<number> {
-    let count = await this.latestRoundsModel.count();
+    const count = await this.latestRoundsModel.count();
     if (count === null || count === undefined) {
       return 0;
     }

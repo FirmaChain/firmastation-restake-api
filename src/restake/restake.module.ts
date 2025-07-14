@@ -5,6 +5,6 @@ import { RestakeService } from './restake.service';
 
 @Module({
   controllers: [RestakeController],
-  providers: [RestakeService]
+  providers: [RestakeService],
 })
 export class RestakeModule {}
